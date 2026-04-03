@@ -1,4 +1,4 @@
-function [x_b,y_b] = NACA_Airfoils(m,p,t,c,N)
+function [x_b,y_b] = NACA_Airfoils(m,p,t,c,N, x)
 % _b is a vector containing the x-location of the boundary points, y_b is a vector containing the
 %y-location of the boundary points, m is the maximum camber, p is the location of maximum camber, t is
 % the thickness, c is the chord length, and N is the number of employed panels.
@@ -7,12 +7,11 @@ function [x_b,y_b] = NACA_Airfoils(m,p,t,c,N)
 
 %----------------------------
 pc= p*c;
-x = linspace(0,c,N);
 y_c = zeros(size(x));
 zeta = zeros(size(x));
 
 
-y_t = ((t/0.2)*c)*(0.2969*sqrt(x/c) - 0.1260*((x/c).^2) + 0.2843*((x/c).^3) - 0.1036*((x/c).^4)); %Thickness distribution (vector)
+y_t = ((t/0.2)*c)*(0.2969*sqrt(x/c) - 0.1260*(x/c) - 0.3516*((x/c).^2) + 0.2843*((x/c).^3) - 0.1036*((x/c).^4)); %Thickness distribution (vector)
 
 
 % first part of piecewise function from 0 < x < p*c
@@ -58,7 +57,12 @@ y_L = y_c - y_t.*cos(zeta);
 %% TEST PLOT
 
 figure();
+hold on;
+
+ylim([-c/2,c/2]);
+
 plot(x_U,y_U);
-hold on
 plot(x_L,y_L);
+
+hold off;
 

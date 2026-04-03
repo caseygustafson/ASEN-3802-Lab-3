@@ -10,23 +10,19 @@ close all;
 %toggles
 p1_task1 = 0;
 
-% % EXAMPLE INPUT NACA 2415
-% m= .04;
-% p = .4;
-% t = 0.15;
-% c = 5;
-% N=10;
+
+%x = linspace(0,c,N);
 
 
-airfoil = '4415';
+airfoil = '2421';
 
 m = str2num(airfoil(1))/100;
 p = str2num(airfoil(2))/10;
 t = str2num(airfoil(3:4))/100;
 
 
-c = 10;
-N = 10;
+c = 1;
+N = 50;
 r = c/2;
 x = zeros(1,10);
 dtheta = 180/(N-1);
@@ -39,4 +35,4 @@ angle = angle - dtheta;
 end
 
 
-NACA_Airfoils(m, p, t, c, N);
+NACA_Airfoils(m, p, t, c, N, x);
