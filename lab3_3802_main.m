@@ -8,31 +8,46 @@ close all;
 
 %--------------------------------------------------------------------
 %toggles
-p1_task1 = 0;
+gen_plots = 1;
+
+p1_task1 = 1;
+p1_task2 = 1;
+%--------------------------------------------------------------------
 
 
-%x = linspace(0,c,N);
+if(p1_task1)
+    %get data from airfoil name
+    airfoil = '2421';
+    
+    m = str2num(airfoil(1))/100;
+    p = str2num(airfoil(2))/10;
+    t = str2num(airfoil(3:4))/100;
+    
+    %get x coordinates based on circle method
+        
+    c = 1;
+    N = 50;
+    r = c/2;
+    x = zeros(1,10);
+    dtheta = 180/(N-1);
+    angle = 180;
+    for i=1:N
+    
+    x(i) = r*cosd(angle) + r;
+    
+    angle = angle - dtheta;
+    end
+    
+    %generate the airfoil
+    %pass 1 for clockwise 2 for counterclockwise
+    [x_a, y_a] = NACA_Airfoils(m, p, t, c, N, x, 2);
 
-
-airfoil = '2421';
-
-m = str2num(airfoil(1))/100;
-p = str2num(airfoil(2))/10;
-t = str2num(airfoil(3:4))/100;
-
-
-c = 1;
-N = 50;
-r = c/2;
-x = zeros(1,10);
-dtheta = 180/(N-1);
-angle = 180;
-for i=1:N
-
-x(i) = r*cosd(angle) + r;
-
-angle = angle - dtheta;
+    if(gen_plots)
+        airfoil_plot(x_a, y_a, airfoil, c);
+    end
 end
 
+if(p1_task2)
 
-NACA_Airfoils(m, p, t, c, N, x);
+
+end
