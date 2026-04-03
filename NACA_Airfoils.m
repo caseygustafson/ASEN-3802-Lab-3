@@ -45,7 +45,8 @@ plot(x_U,y_U);
 hold on
 plot(x_L,y_L);
 
-
+figure;
+plot(x,y_c);
 
 
 
