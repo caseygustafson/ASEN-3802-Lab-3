@@ -1,6 +1,6 @@
 %Name: 3802-Lab3 Main
-%Authors: Harroop Sooch, 
-%Date: 3/27/2026
+%Authors: Harroop Sooch, Kyan Mathysen-Gerst
+%Date: 4/6/2026
 
 clear;
 clc;
@@ -76,8 +76,7 @@ fprintf('CL for NACA 0012 at alpha = 12 deg: %f\n', cl);
 
 
 % Part 2
-
-    N_exact = 400;
+    N_exact = 1000;
     
     x_exact = zeros(1,N_exact);
     dtheta = 180/(N_exact-1);
@@ -91,7 +90,7 @@ fprintf('CL for NACA 0012 at alpha = 12 deg: %f\n', cl);
     [x_b_exact, y_b_exact] = NACA_Airfoils(m,p,t,c,N_exact,x_exact,2);
     cl_exact = Vortex_Panel(x_b_exact, y_b_exact, Vinf, alpha);
 
-    % try different panel numbers
+    % different panel numbers
     N_values = 10:10:200;
     cl_values = zeros(size(N_values));
     error_values = zeros(size(N_values));
@@ -115,7 +114,7 @@ fprintf('CL for NACA 0012 at alpha = 12 deg: %f\n', cl);
         error_values(k) = abs((cl_values(k) - cl_exact)/cl_exact)*100;
     end
 
-    % find minimum N with error less than 1%
+    % minimum N with less 1% error
     N_min = 0;
     cl_min = 0;
 
@@ -127,12 +126,10 @@ fprintf('CL for NACA 0012 at alpha = 12 deg: %f\n', cl);
         end
     end
 
-    % print results
     fprintf('Exact cl = %f\n', cl_exact);
     fprintf('Minimum number of panels for less than 1 percent error = %d\n', N_min);
     fprintf('cl at minimum number of panels = %f\n', cl_min);
-
-    % plot convergence
+    
     figure
     plot(N_values, cl_values, 'bo-')
     hold on
