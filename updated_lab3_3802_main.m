@@ -6,14 +6,14 @@ close all;
 ALPHA = 12;         % Angle of attack in degrees
 
 %% ---------------- Task 1: Airfoil Plots for 2421 and 0012 ----------------
-airfoils = {'2421','0012'};   % List of airfoils to plot
+airfoils = {'2421','0021'};   % List of airfoils to plot
 N_plot = 50;                  % Panels for plotting
 
 for k = 1:length(airfoils)
     airfoil = airfoils{k};
     
     % Generate airfoil coordinates
-    [YC3, X3, XB3, YB3, aL03] = Airfoil_Generator(str2double(airfoil), N_plot);
+    [YC3, X3, XB3, YB3, aL03] = NACA_Airfoils(str2double(airfoil), N_plot);
     
     % Plot airfoil with panel points
     figure;
@@ -40,7 +40,7 @@ CL1 = zeros(size(N));
 
 for i = 1:length(N)
     Ni = N(i);
-    [~, ~, XB3, YB3, ~] = Airfoil_Generator(12, Ni);  % NACA 0012
+    [~, ~, XB3, YB3, ~] = NACA_Airfoils(12, Ni);  % NACA 0012
     CL1(i) = Vortex_Panel(XB3, YB3, ALPHA);
 end
 
@@ -58,7 +58,7 @@ CL_refine = zeros(size(N_refine));
 
 for i = 1:length(N_refine)
     Ni = N_refine(i);
-    [~, ~, XB3, YB3, ~] = Airfoil_Generator(12, Ni);
+    [~, ~, XB3, YB3, ~] = NACA_Airfoils(12, Ni);
     CL_refine(i) = Vortex_Panel(XB3, YB3, ALPHA);
 end
 
@@ -82,6 +82,7 @@ legend('CL vs N', sprintf('1%% Error Threshold at N = %d', N_min_actual));
 hold off;
 
 saveas(gcf, 'convergenceStudyPanels_highres', 'png');
+
 %% ---------------- Task 3 & 4: Airfoil Thickness and Camber Effects ----------------
 clear; clc; close all;
 
@@ -96,7 +97,7 @@ ZeroLift.Thick = struct();  % Struct to hold zero-lift AoA
 
 for k = 1:length(thick_airfoils)
     airfoil = str2double(thick_airfoils{k});
-    [YC, Xc, XB, YB, aL0] = Airfoil_Generator(airfoil, Panels);
+    [YC, Xc, XB, YB, aL0] = NACA_Airfoils(airfoil, Panels);
     
     ZeroLift.Thick.(sprintf('NACA%s', thick_airfoils{k})) = aL0; % zero-lift AoA
     
@@ -133,7 +134,7 @@ ZeroLift.Camber = struct();
 
 for k = 1:length(camber_airfoils)
     airfoil = str2double(camber_airfoils{k});
-    [YC, Xc, XB, YB, aL0] = Airfoil_Generator(airfoil, Panels);
+    [YC, Xc, XB, YB, aL0] = NACA_Airfoils(airfoil, Panels);
     
     ZeroLift.Camber.(sprintf('NACA%s', camber_airfoils{k})) = aL0;
     
