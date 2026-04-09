@@ -71,14 +71,17 @@ fprintf('Sectional lift coefficient CL for NACA 0012 at alpha = %.1f deg: %.4f\n
 fprintf('Minimum number of panels for 1%% relative error: %d\n', N_min_actual);
 
 % Step 4: Plot convergence
+N_total = 2*N;
+N_min_total = 2*N_min_actual;
+
 figure;
 hold on; grid on;
-plot(N, CL1, 'b-', 'LineWidth', 1.5);           
-xline(N_min_actual, 'r--', 'LineWidth', 2);     
+plot(N_total, CL1, 'b-', 'LineWidth', 1.5);           
+xline(N_min_total, 'r--', 'LineWidth', 2);     
 xlabel('Number of Panels');
 ylabel('Sectional Coefficient of Lift CL');
 title('NACA 0012 Convergence Study');
-legend('CL vs N', sprintf('1%% Error Threshold at N = %d', N_min_actual));
+legend('CL vs N', sprintf('1%% Error Threshold at N = %d', N_min_total));
 hold off;
 
 saveas(gcf, 'convergenceStudyPanels_highres', 'png');
