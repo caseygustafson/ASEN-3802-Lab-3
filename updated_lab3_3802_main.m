@@ -82,3 +82,95 @@ legend('CL vs N', sprintf('1%% Error Threshold at N = %d', N_min_actual));
 hold off;
 
 saveas(gcf, 'convergenceStudyPanels_highres', 'png');
+%% ---------------- Task 3 & 4: Airfoil Thickness and Camber Effects ----------------
+clear; clc; close all;
+
+Panels = 50;                    % Number of panels for Vortex Panel
+ALPHA = linspace(-8, 8, 100);   % Range of angles of attack
+
+%% ---------------- Part A: Effect of Thickness (0006, 0012, 0018) ----------------
+thick_airfoils = {'0006','0012','0018'};
+CL.Thick = struct();        % Struct to hold sectional lift
+LiftSlope.Thick = struct(); % Struct to hold a0
+ZeroLift.Thick = struct();  % Struct to hold zero-lift AoA
+
+for k = 1:length(thick_airfoils)
+    airfoil = str2double(thick_airfoils{k});
+    [YC, Xc, XB, YB, aL0] = Airfoil_Generator(airfoil, Panels);
+    
+    ZeroLift.Thick.(sprintf('NACA%s', thick_airfoils{k})) = aL0; % zero-lift AoA
+    
+    % Compute sectional lift for all alpha
+    CL.Thick.(sprintf('NACA%s', thick_airfoils{k})) = zeros(1,length(ALPHA));
+    for j = 1:length(ALPHA)
+        CL.Thick.(sprintf('NACA%s', thick_airfoils{k}))(j) = Vortex_Panel(XB, YB, ALPHA(j));
+    end
+    
+    % Compute lift slope a0 using 0° and 5° AoA
+    CL0 = Vortex_Panel(XB, YB, 0);
+    CL5 = Vortex_Panel(XB, YB, 5);
+    LiftSlope.Thick.(sprintf('NACA%s', thick_airfoils{k})) = (CL5 - CL0)/5;
+end
+
+% Plot thickness study
+figure;
+hold on; grid on;
+for k = 1:length(thick_airfoils)
+    plot(ALPHA, CL.Thick.(sprintf('NACA%s', thick_airfoils{k})), 'DisplayName', ['NACA ', thick_airfoils{k}]);
+end
+xlabel('Angle of Attack (deg)');
+ylabel('Coefficient of Lift, CL');
+title('Effect of Airfoil Thickness on Lift');
+legend show Location best;
+hold off;
+saveas(gcf, 'thicknessImpact','png');
+
+%% ---------------- Part B: Effect of Camber (0012, 2412, 4412) ----------------
+camber_airfoils = {'0012','2412','4412'};
+CL.Camber = struct();
+LiftSlope.Camber = struct();
+ZeroLift.Camber = struct();
+
+for k = 1:length(camber_airfoils)
+    airfoil = str2double(camber_airfoils{k});
+    [YC, Xc, XB, YB, aL0] = Airfoil_Generator(airfoil, Panels);
+    
+    ZeroLift.Camber.(sprintf('NACA%s', camber_airfoils{k})) = aL0;
+    
+    CL.Camber.(sprintf('NACA%s', camber_airfoils{k})) = zeros(1,length(ALPHA));
+    for j = 1:length(ALPHA)
+        CL.Camber.(sprintf('NACA%s', camber_airfoils{k}))(j) = Vortex_Panel(XB, YB, ALPHA(j));
+    end
+    
+    CL0 = Vortex_Panel(XB, YB, 0);
+    CL5 = Vortex_Panel(XB, YB, 5);
+    LiftSlope.Camber.(sprintf('NACA%s', camber_airfoils{k})) = (CL5 - CL0)/5;
+end
+
+% Plot camber study
+figure;
+hold on; grid on;
+for k = 1:length(camber_airfoils)
+    plot(ALPHA, CL.Camber.(sprintf('NACA%s', camber_airfoils{k})), 'DisplayName', ['NACA ', camber_airfoils{k}]);
+end
+xlabel('Angle of Attack (deg)');
+ylabel('Coefficient of Lift, CL');
+title('Effect of Airfoil Camber on Lift');
+legend show Location best;
+hold off;
+saveas(gcf, 'camberImpact','png');
+
+%% ---------------- Part C: Print results ----------------
+fprintf('--- Thickness Study ---\n');
+for k = 1:length(thick_airfoils)
+    af = thick_airfoils{k};
+    fprintf('NACA %s: a0 = %.4f per deg, alpha_L0 = %.4f deg\n', ...
+        af, LiftSlope.Thick.(sprintf('NACA%s',af)), ZeroLift.Thick.(sprintf('NACA%s',af)));
+end
+
+fprintf('--- Camber Study ---\n');
+for k = 1:length(camber_airfoils)
+    af = camber_airfoils{k};
+    fprintf('NACA %s: a0 = %.4f per deg, alpha_L0 = %.4f deg\n', ...
+        af, LiftSlope.Camber.(sprintf('NACA%s',af)), ZeroLift.Camber.(sprintf('NACA%s',af)));
+end
