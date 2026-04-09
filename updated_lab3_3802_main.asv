@@ -86,7 +86,7 @@ saveas(gcf, 'convergenceStudyPanels_highres', 'png');
 %% ---------------- Task 3 & 4: Airfoil Thickness and Camber Effects ----------------
 clear; clc; close all;
 
-Panels = 35;                    % Number of panels for Vortex Panel
+Panels = 50;                    % Number of panels for Vortex Panel
 ALPHA = linspace(-8, 8, 100);   % Range of angles of attack
 
 %% ---------------- Part A: Effect of Thickness (0006, 0012, 0018) ----------------
@@ -135,10 +135,6 @@ ExperimentalAoA_0012 = data0012(:,3);
 cl_experimental_0012 = data0012(:,4);
 plot(ExperimentalAoA_0012,cl_experimental_0012);
 legend('NACA 0006','NACA 0012','NACA 0018','Exp. NACA 0006','Exp. NACA 0012')
-
-xlim([-8 8]);
-ylim([-1 1]);
-
 hold off;
 saveas(gcf, 'thicknessImpact','png');
 
@@ -190,9 +186,6 @@ cl_experimental_4412 = data4412(:,4);
 plot(ExperimentalAoA_4412,cl_experimental_4412);
 
 legend('NACA 0012','NACA 2412','NACA 4412','Exp. NACA 0012','Exp. NACA 2412','Exp. NACA 4412')
-
-xlim([-8 8]);
-ylim([-1 1.5]);
 
 hold off;
 saveas(gcf, 'camberImpact','png');
