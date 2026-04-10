@@ -88,13 +88,13 @@ saveas(gcf, 'convergenceStudyPanels_highres', 'png');
 %% Task 3 & 4 Airfoil Thickness and Camber Effects
 clear; clc; close all;
 
-<<<<<<< HEAD
+
 Panels = 35;                    % Number of panels for Vortex Panel
 ALPHA = linspace(-8, 8, 100);   % Range of angles of attack
-=======
+
 Panels = 50; % Number of panels for Vortex Panel
 ALPHA = linspace(-8, 8, 100); % Range of angles of attack
->>>>>>> 77c2a791b353508c877280ad470c63fd1d0da740
+
 
 %% Part A, Effect of Thickness (0006, 0012, 0018)
 thick_airfoils = {'0006','0012','0018'};
