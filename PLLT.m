@@ -1,14 +1,15 @@
-function [e,c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N, AR)
+function [e,c_L,c_Di,ass,balls] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-
+AR = 8;
 
 % Pre-allocate theta
-theta = zeros(N);
+theta = zeros(N,1);
 for i=1:N
     theta(i) = i * pi / (2*N);
 end
+
 
 % make variables functions of distance along span, y
 y = -b/2 * cos(theta);
@@ -35,24 +36,25 @@ for i=1:N
 end
 
 
-x = An/geo_aero;
+x = An\geo_aero;
 
 % cl calculation
 c_L = pi * AR * x(1);
 
-%zeta calculation
-zeta=0
+%delta (previously zeta) calculation
+delta=0;
 for i=2:N
     n = i*2-1;
-    zeta = zeta + n*(x(i)/x(1))^2;
+    delta = delta + n*(x(i)/x(1))^2;
 
 end
 
-c_Di = (c_L^2/(pi*AR))*(1+zeta);
+c_Di = (c_L^2/(pi*AR))*(1+delta);
 
 %e calculation
 
-e = (1+zeta)^(-1);
+e = (1+delta)^(-1);
+
+
 
 end
-

@@ -233,6 +233,11 @@ geo_t=1.1;
 geo_r=1;
 N=50;
 
+
+figure;
+hold on;
+for i = 1:50
 [e,c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r(i),aero_t,aero_r,geo_t,geo_r,N);
 
+end
 
