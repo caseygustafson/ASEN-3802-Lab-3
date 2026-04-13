@@ -221,18 +221,40 @@ for k = 1:length(camber_airfoils)
 end
 
 %% Task 2
-clc;clear;close all;
-b=10;
-a0_t=2*pi;
-a0_r=2*pi;
-c_t= 1;
-c_r= linspace(c_t,50,50);
-aero_t= 1.5;
-aero_r=1;
-geo_t=1.1;
-geo_r=1;
-N=50;
-
-[e,c_L,c_Di] = PLLT(b,a0_t,a0_r,c_t,c_r(i),aero_t,aero_r,geo_t,geo_r,N);
 
 
+b = 100;
+N = 50;
+
+AR_list = [4 6 8 10];
+lambda_vals = 0:0.05:1; %lambda = cr/ct
+
+figure; hold on; grid on;
+
+for k = 1:length(AR_list)
+
+    AR = AR_list(k);
+    delta_vals = zeros(size(lambda_vals));
+
+    for m = 1:length(lambda_vals)
+
+        lambda = lambda_vals(m);
+
+        c_r = 2*b/(AR*(1+lambda));
+        c_t = lambda*c_r;
+
+        [e,CL,CDi] = PLLT( b,2*pi,2*pi,c_t,c_r,0,0,5,5,N);
+
+        delta_vals(m) = 1/e - 1;
+
+    end
+
+    plot(lambda_vals,delta_vals,'LineWidth',2,...
+        'DisplayName',['AR = ',num2str(AR)]);
+end
+
+xlabel('c_t / c_r');
+ylabel('\delta');
+title('Induced Drag Factor vs Taper Ratio');
+legend show;
+saveas(gcf, 'CDi_vs_Taper_ratio','png');
