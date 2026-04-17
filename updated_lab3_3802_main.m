@@ -86,7 +86,7 @@ hold off;
 saveas(gcf, 'convergenceStudyPanels_highres', 'png');
 
 %% Task 3 & 4 Airfoil Thickness and Camber Effects
-clear; clc; close all;
+
 
 
 Panels = 35;                    % Number of panels for Vortex Panel
@@ -258,3 +258,42 @@ ylabel('\delta');
 title('Induced Drag Factor vs Taper Ratio');
 legend show;
 saveas(gcf, 'CDi_vs_Taper_ratio','png');
+
+%% PART 3 Analysis of NACA 2412 - 0012
+clc;clear;close all;
+
+%airfoil parameters
+
+b = 10.159999999999998; % 33 ft 4 in to meters
+
+c_r = 1.6256; %5 ft 4 in to meters
+c_t = 1.1303; %3 ft 8.5 in to meters
+a0_t = 2*pi;
+a0_r = 2*pi;
+geo_t = 0;
+geo_r = 1;
+aero_t = 2*pi;
+aero_r = 2*pi;
+airfoil_root = 2412;
+airfoil_tip = 0012;
+% Convergence Study (This is copied from previous part)
+% compute expected value:
+N_high = 500; % use 500 N to get expected value.
+[e_true,c_L_true,c_Di_true] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N_high);
+
+for N=1:100
+[e(N),c_L(N),c_Di(N)] = PLLT(b,a0_t,a0_r,c_t,c_r,aero_t,aero_r,geo_t,geo_r,N);
+end
+% Compute relative error
+c_L_rel_error = (abs(c_L - c_L_true) ./ abs(c_L_true)) .* 100;
+c_Di_rel_error = (abs(c_Di - c_Di_true) ./ abs(c_Di_true)) .* 100;
+
+error_requirement = [10,1,0.1];
+for i=1:length(error_requirement)
+    idx_c_L(i) = find(c_Di_rel_error < error_requirement(i), 1); % Panels required
+    idx_c_Di(i) = find(c_Di_rel_error < error_requirement(i), 1);
+end
+
+% Currently the number of panels N seems really small, with only 6 required
+% for 0.1 percent error. not sure whats wrong.
+
