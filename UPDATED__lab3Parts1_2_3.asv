@@ -189,12 +189,12 @@ legend show Location best;
 
 plot(ExperimentalAoA_0012, cl_experimental_0012);
 
-% NACA 2412 - 2% camber. 
+% NACA 2412 - 2% camber. Lift slope ~0.108/deg, aL0 = -2.07 deg
 ExperimentalAoA_2412 = [-8, -6, -4, -2, 0, 2, 4, 6, 8];
 cl_experimental_2412 = [-0.58, -0.38, -0.17, 0.04, 0.25, 0.45, 0.65, 0.85, 1.04];
 plot(ExperimentalAoA_2412, cl_experimental_2412);
 
-% NACA 4412 - 4% camber. 
+% NACA 4412 - 4% camber. Lift slope ~0.108/deg, aL0 = -4.15 deg
 ExperimentalAoA_4412 = [-8, -6, -4, -2, 0, 2, 4, 6, 8];
 cl_experimental_4412 = [-0.36, -0.15, 0.07, 0.28, 0.50, 0.71, 0.91, 1.11, 1.30];
 plot(ExperimentalAoA_4412, cl_experimental_4412);
@@ -261,8 +261,9 @@ disp(results_check);
 
 AR_list = [4 6 8 10]; % Aspect ratios to sweep
 taper = linspace(0, 1, 100); % taper ratio ct/cr range
-N_fig = 50; % number of modes
-% 
+N_fig = 50; % number of modes (matches Anderson)
+
+% Uniform airfoil + geometric AoA assumptions
 a0_t_fig = 2*pi;
 a0_r_fig = 2*pi;
 aero_t_fig = 0;
@@ -506,7 +507,7 @@ t = str2double(digits(3:4)) / 100; % thickness
 
 % Cosine spacing along chord
 beta = linspace(0, pi, N);
-x = 0.5 * c * (1 - cos(beta));  
+x = 0.5 * c * (1 - cos(beta));  % 0 -> c
 
 % Thickness distribution
 yt = 5 * t * c * ( 0.2969 * sqrt(x / c) - 0.1260 * (x / c) - 0.3516 * (x / c).^2 + 0.2843 * (x / c).^3 - 0.1036 * (x / c).^4 );
@@ -516,13 +517,13 @@ yc = zeros(size(x));
 dyc_dx = zeros(size(x));
 
 if p ~= 0 && m ~= 0
-    % Front portion
+    % Front portion: 0 <= x < p*c
     idx1 = x < p * c;
     xc1 = x(idx1) / c;
     yc(idx1) = (m / p^2) * (2 * p * xc1 - xc1.^2) * c;
     dyc_dx(idx1) = (2 * m / p^2) .* (p - xc1);
 
-    % Rear portion
+    % Rear portion: p*c <= x <= c
     idx2 = ~idx1;
     xc2 = x(idx2) / c;
     yc(idx2) = (m / (1 - p)^2) * ((1 - 2 * p) + 2 * p * xc2 - xc2.^2) * c;
@@ -538,11 +539,11 @@ yu = yc + yt .* cos(theta);
 xl = x + yt .* sin(theta);
 yl = yc - yt .* cos(theta);
 
-% Combine into clockwise boundary 
+% Combine into clockwise boundary (TE->LE->TE)
 XB = [fliplr(xl), xu(2:end)];
 YB = [fliplr(yl), yu(2:end)];
 
-% 0-lift aoa, thin aifoil theory
+% 0-lift aoa, t
 if m ~= 0 && p ~= 0
     Nint = 1000;
     theta_int = linspace(0, pi, Nint);
